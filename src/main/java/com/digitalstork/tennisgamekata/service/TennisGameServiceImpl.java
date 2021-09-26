@@ -64,9 +64,9 @@ public class TennisGameServiceImpl implements TennisGameService {
             tennisGame.setStatus(GameStatus.DEUCE);
         }
 
-        if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() >= tennisGame.getPlayerTwoScore() + 1) {
+        if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() == tennisGame.getPlayerTwoScore() + 1) {
             tennisGame.setStatus(GameStatus.PLAYER1_ADVANTAGE);
-        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() >= tennisGame.getPlayerOneScore() + 1) {
+        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() == tennisGame.getPlayerOneScore() + 1) {
             tennisGame.setStatus(GameStatus.PLAYER2_ADVANTAGE);
         }
 
