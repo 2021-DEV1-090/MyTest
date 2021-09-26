@@ -54,9 +54,11 @@ public class TennisGameServiceImpl implements TennisGameService {
 
         if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() >= tennisGame.getPlayerTwoScore() + 2) {
             log.info("{} Won the game", tennisGame.getPlayerOne());
+            tennisGame.setStatus(GameStatus.FINISHED);
             tennisGame.setGameEnded(true);
         } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() >= tennisGame.getPlayerOneScore() + 2) {
             log.info("{} Won the game", tennisGame.getPlayerTwo());
+            tennisGame.setStatus(GameStatus.FINISHED);
             tennisGame.setGameEnded(true);
         }
 
