@@ -3,6 +3,7 @@ package com.digitalstork.tennisgamekata.service;
 import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.exception.PlayerNotFoundException;
 import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
 import com.digitalstork.tennisgamekata.mapper.TennisGameCreateDtoMapper;
 import com.digitalstork.tennisgamekata.mapper.TennisGameMapper;
@@ -42,6 +43,8 @@ public class TennisGameServiceImpl implements TennisGameService {
             tennisGame.setPlayerOneScore(tennisGame.getPlayerOneScore() + 1);
         } else if (scoreDto.getScorer().equals(tennisGame.getPlayerTwo())) {
             tennisGame.setPlayerTwoScore(tennisGame.getPlayerTwoScore() + 1);
+        } else {
+            throw new PlayerNotFoundException("Player not found with name: " + scoreDto.getScorer());
         }
 
         TennisGame savedTennisGame = tennisGameRepository.save(tennisGame);

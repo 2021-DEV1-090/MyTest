@@ -127,8 +127,6 @@ class TennisGameServiceImplTest {
         // When
         when(tennisGameRepository.findById(gameId))
                 .thenReturn(Optional.of(tennisGame));
-        when(tennisGameRepository.save(any(TennisGame.class)))
-                .thenReturn(tennisGame);
 
         // Test Assertions
         PlayerNotFoundException playerNotFoundException = assertThrows(PlayerNotFoundException.class, () -> {
