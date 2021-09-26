@@ -2,6 +2,7 @@ package com.digitalstork.tennisgamekata.mapper;
 
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.model.TennisGame;
+import org.springframework.beans.BeanUtils;
 
 import java.util.function.Function;
 
@@ -9,6 +10,9 @@ public class TennisGameCreateDtoMapper implements Function<TennisGameCreateDto, 
 
     @Override
     public TennisGame apply(TennisGameCreateDto tennisGameCreateDto) {
-        return null;
+        TennisGame tennisGame = new TennisGame();
+        BeanUtils.copyProperties(tennisGameCreateDto, tennisGame);
+
+        return tennisGame;
     }
 }
