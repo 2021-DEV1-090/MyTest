@@ -1,5 +1,7 @@
 package com.digitalstork.tennisgamekata.util;
 
+import com.digitalstork.tennisgamekata.exception.IllegalScoreException;
+
 public class ScoreUtil {
 
     private ScoreUtil() {
@@ -17,7 +19,7 @@ public class ScoreUtil {
                 case 3:
                     return "40";
                 default:
-                    return null;
+                    throw new IllegalScoreException("Illegal score!");
             }
         } else {
             if (score == otherScore || score + 1 == otherScore || score + 2 == otherScore) return "40";
@@ -26,6 +28,6 @@ public class ScoreUtil {
                 if (score == otherScore + 2) return "Won";
             }
         }
-        return null;
+        throw new IllegalScoreException("Illegal score!");
     }
 }
