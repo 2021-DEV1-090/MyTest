@@ -12,6 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class TennisGameServiceImpl implements TennisGameService {
@@ -34,6 +36,17 @@ public class TennisGameServiceImpl implements TennisGameService {
 
     @Override
     public TennisGameDto score(Long gameId, ScoreDto scoreDto) {
-        return null;
+        Optional<TennisGame> optionalTennisGame = tennisGameRepository.findById(gameId);
+
+        if (optionalTennisGame.isEmpty()) return null;
+        TennisGame tennisGame = optionalTennisGame.get();
+
+        if (scoreDto.getScorer().equals(tennisGame.getPlayerOne())) {
+            tennisGame.setPlayerOneScore(tennisGame.getPlayerOneScore() + 1);
+        } else if (scoreDto.getScorer().equals(tennisGame.getPlayerTwo())) {
+            tennisGame.setPlayerTwoScore(tennisGame.getPlayerTwoScore() + 1);
+        }
+
+        return tennisGameMapper.apply(tennisGame);
     }
 }
