@@ -55,13 +55,19 @@ public class TennisGameServiceImpl implements TennisGameService {
         if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() >= tennisGame.getPlayerTwoScore() + 2) {
             log.info("{} Won the game", tennisGame.getPlayerOne());
             tennisGame.setGameEnded(true);
-        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() > tennisGame.getPlayerOneScore() + 2) {
+        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() >= tennisGame.getPlayerOneScore() + 2) {
             log.info("{} Won the game", tennisGame.getPlayerTwo());
             tennisGame.setGameEnded(true);
         }
 
         if (tennisGame.getPlayerOneScore() >= 3 && tennisGame.getPlayerOneScore() == tennisGame.getPlayerTwoScore()) {
             tennisGame.setStatus(GameStatus.DEUCE);
+        }
+
+        if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() >= tennisGame.getPlayerTwoScore() + 1) {
+            tennisGame.setStatus(GameStatus.PLAYER1_ADVANTAGE);
+        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() >= tennisGame.getPlayerOneScore() + 1) {
+            tennisGame.setStatus(GameStatus.PLAYER2_ADVANTAGE);
         }
 
         TennisGame savedTennisGame = tennisGameRepository.save(tennisGame);
