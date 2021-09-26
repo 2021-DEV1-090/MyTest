@@ -31,6 +31,7 @@ class TennisGameServiceImplTest {
         tennisGameCreateDto.setPlayerTwo("Player 2");
 
         TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(1L);
         tennisGame.setPlayerOne("Player 1");
         tennisGame.setPlayerTwo("Player 2");
 
