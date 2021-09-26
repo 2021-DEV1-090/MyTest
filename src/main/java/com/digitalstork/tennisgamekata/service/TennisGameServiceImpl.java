@@ -5,6 +5,7 @@ import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
 import com.digitalstork.tennisgamekata.exception.PlayerNotFoundException;
 import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
+import com.digitalstork.tennisgamekata.exception.UnauthorizedActionException;
 import com.digitalstork.tennisgamekata.mapper.TennisGameCreateDtoMapper;
 import com.digitalstork.tennisgamekata.mapper.TennisGameMapper;
 import com.digitalstork.tennisgamekata.model.TennisGame;
@@ -38,6 +39,9 @@ public class TennisGameServiceImpl implements TennisGameService {
     public TennisGameDto score(Long gameId, ScoreDto scoreDto) {
         TennisGame tennisGame = tennisGameRepository.findById(gameId)
                 .orElseThrow(() -> new ResourceNotFoundException("Tennis game not found with id: " + gameId));
+
+        if (tennisGame.isGameEnded())
+            throw new UnauthorizedActionException("You cannot score on a game that is already finished!");
 
         if (scoreDto.getScorer().equals(tennisGame.getPlayerOne())) {
             tennisGame.setPlayerOneScore(tennisGame.getPlayerOneScore() + 1);
