@@ -142,7 +142,7 @@ class TennisGameServiceImplTest {
         tennisGame.setPlayerTwo("Player 2");
         tennisGame.setPlayerOneScore(3);
         tennisGame.setPlayerTwoScore(2);
-        tennisGame.setStatus(GameStatus.IN_PROGRESS);
+        tennisGame.setStatus(GameStatus.STARTED);
 
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScorer("Player 1");
@@ -201,7 +201,7 @@ class TennisGameServiceImplTest {
         tennisGame.setPlayerTwo("Player 2");
         tennisGame.setPlayerOneScore(3);
         tennisGame.setPlayerTwoScore(2);
-        tennisGame.setStatus(GameStatus.IN_PROGRESS);
+        tennisGame.setStatus(GameStatus.STARTED);
 
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScorer("Player 2");
