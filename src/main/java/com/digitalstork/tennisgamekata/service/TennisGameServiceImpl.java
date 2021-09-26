@@ -47,6 +47,14 @@ public class TennisGameServiceImpl implements TennisGameService {
             throw new PlayerNotFoundException("Player not found with name: " + scoreDto.getScorer());
         }
 
+        if (tennisGame.getPlayerOneScore() >= 4 && tennisGame.getPlayerOneScore() >= tennisGame.getPlayerTwoScore() + 2) {
+            log.info("{} Won the game", tennisGame.getPlayerOne());
+            tennisGame.setGameEnded(true);
+        } else if (tennisGame.getPlayerTwoScore() >= 4 && tennisGame.getPlayerTwoScore() > tennisGame.getPlayerOneScore() + 2) {
+            log.info("{} Won the game", tennisGame.getPlayerTwo());
+            tennisGame.setGameEnded(true);
+        }
+
         TennisGame savedTennisGame = tennisGameRepository.save(tennisGame);
 
         return tennisGameMapper.apply(savedTennisGame);
