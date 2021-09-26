@@ -142,6 +142,7 @@ class TennisGameServiceImplTest {
         tennisGame.setPlayerTwo("Player 2");
         tennisGame.setPlayerOneScore(3);
         tennisGame.setPlayerTwoScore(2);
+        tennisGame.setStatus(GameStatus.IN_PROGRESS);
 
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScorer("Player 1");
@@ -158,6 +159,7 @@ class TennisGameServiceImplTest {
         assertEquals("Won", tennisGameDto.getPlayerOneScore());
         assertEquals("30", tennisGameDto.getPlayerTwoScore());
         assertTrue(tennisGame.isGameEnded());
+        assertEquals(GameStatus.FINISHED, tennisGameDto.getStatus());
     }
 
     @Test
