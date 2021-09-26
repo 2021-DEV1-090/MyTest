@@ -19,6 +19,6 @@ public class TennisGameController {
 
     @PostMapping("/new")
     public ResponseEntity<TennisGameDto> createNewGame(@RequestBody TennisGameCreateDto tennisGameCreateDto) {
-        return ResponseEntity.ok(new TennisGameDto());
+        return ResponseEntity.ok(tennisGameService.createGame(tennisGameCreateDto));
     }
 }
