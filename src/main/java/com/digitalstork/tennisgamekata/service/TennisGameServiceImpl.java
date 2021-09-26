@@ -47,6 +47,8 @@ public class TennisGameServiceImpl implements TennisGameService {
             tennisGame.setPlayerTwoScore(tennisGame.getPlayerTwoScore() + 1);
         }
 
-        return tennisGameMapper.apply(tennisGame);
+        TennisGame savedTennisGame = tennisGameRepository.save(tennisGame);
+
+        return tennisGameMapper.apply(savedTennisGame);
     }
 }
