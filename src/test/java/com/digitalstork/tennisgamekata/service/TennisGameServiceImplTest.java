@@ -135,4 +135,40 @@ class TennisGameServiceImplTest {
 
         assertEquals("Player not found with name: " + scoreDto.getScorer(), playerNotFoundException.getMessage());
     }
+
+    @Test
+    void should_win_and_end_game_if_player_have_forty_and_win_ball() {
+        // Given
+        Long gameId = 1L;
+
+        TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(gameId);
+        tennisGame.setPlayerOne("Player 1");
+        tennisGame.setPlayerTwo("Player 2");
+        tennisGame.setPlayerOneScore(3);
+        tennisGame.setPlayerTwoScore(2);
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        TennisGame updatedTennisGame = new TennisGame();
+        updatedTennisGame.setId(gameId);
+        updatedTennisGame.setPlayerOne(tennisGame.getPlayerOne());
+        updatedTennisGame.setPlayerTwo(tennisGame.getPlayerTwo());
+        updatedTennisGame.setPlayerOneScore(4);
+        updatedTennisGame.setPlayerTwoScore(2);
+
+        // When
+        when(tennisGameRepository.findById(gameId))
+                .thenReturn(Optional.of(tennisGame));
+        when(tennisGameRepository.save(any(TennisGame.class)))
+                .thenReturn(updatedTennisGame);
+        TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
+
+        // Test Assertions
+        assertNotNull(tennisGameDto);
+        assertEquals("Won", tennisGameDto.getPlayerOneScore());
+        assertEquals("30", tennisGameDto.getPlayerTwoScore());
+        assertTrue(tennisGame.isGameEnded());
+    }
 }
