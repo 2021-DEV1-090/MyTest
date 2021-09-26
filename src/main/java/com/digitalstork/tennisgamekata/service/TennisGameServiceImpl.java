@@ -1,5 +1,6 @@
 package com.digitalstork.tennisgamekata.service;
 
+import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
 import com.digitalstork.tennisgamekata.mapper.TennisGameCreateDtoMapper;
@@ -29,5 +30,10 @@ public class TennisGameServiceImpl implements TennisGameService {
         log.info("New Tennis Game between {} and {}", savedTennisGame.getPlayerOne(), savedTennisGame.getPlayerTwo());
 
         return tennisGameMapper.apply(savedTennisGame);
+    }
+
+    @Override
+    public TennisGameDto score(Long gameId, ScoreDto scoreDto) {
+        return null;
     }
 }
