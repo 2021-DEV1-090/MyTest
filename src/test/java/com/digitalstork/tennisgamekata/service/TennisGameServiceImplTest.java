@@ -5,6 +5,7 @@ import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
 import com.digitalstork.tennisgamekata.exception.PlayerNotFoundException;
 import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
+import com.digitalstork.tennisgamekata.exception.UnauthorizedActionException;
 import com.digitalstork.tennisgamekata.model.TennisGame;
 import com.digitalstork.tennisgamekata.repository.TennisGameRepository;
 import org.junit.jupiter.api.Test;
@@ -170,5 +171,33 @@ class TennisGameServiceImplTest {
         assertEquals("Won", tennisGameDto.getPlayerOneScore());
         assertEquals("30", tennisGameDto.getPlayerTwoScore());
         assertTrue(tennisGame.isGameEnded());
+    }
+
+    @Test
+    void should_throw_UnauthorizedActionException_when_attempt_to_score_on_ended_game() {
+        // Given
+        Long gameId = 1L;
+
+        TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(gameId);
+        tennisGame.setPlayerOne("Player 1");
+        tennisGame.setPlayerTwo("Player 2");
+        tennisGame.setPlayerOneScore(6);
+        tennisGame.setPlayerTwoScore(4);
+        tennisGame.setGameEnded(true);
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        // When
+        when(tennisGameRepository.findById(gameId))
+                .thenReturn(Optional.of(tennisGame));
+
+        // Test Assertions
+        UnauthorizedActionException unauthorizedActionException = assertThrows(UnauthorizedActionException.class, () -> {
+            TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
+        });
+
+        assertEquals("You cannot score on a game that is already finished!", unauthorizedActionException.getMessage());
     }
 }
