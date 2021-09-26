@@ -3,6 +3,7 @@ package com.digitalstork.tennisgamekata.service;
 import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
 import com.digitalstork.tennisgamekata.mapper.TennisGameCreateDtoMapper;
 import com.digitalstork.tennisgamekata.mapper.TennisGameMapper;
 import com.digitalstork.tennisgamekata.model.TennisGame;
@@ -11,8 +12,6 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,10 +35,8 @@ public class TennisGameServiceImpl implements TennisGameService {
 
     @Override
     public TennisGameDto score(Long gameId, ScoreDto scoreDto) {
-        Optional<TennisGame> optionalTennisGame = tennisGameRepository.findById(gameId);
-
-        if (optionalTennisGame.isEmpty()) return null;
-        TennisGame tennisGame = optionalTennisGame.get();
+        TennisGame tennisGame = tennisGameRepository.findById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tennis game not found with id: " + gameId));
 
         if (scoreDto.getScorer().equals(tennisGame.getPlayerOne())) {
             tennisGame.setPlayerOneScore(tennisGame.getPlayerOneScore() + 1);
