@@ -69,18 +69,11 @@ class TennisGameServiceImplTest {
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScorer("Player 1");
 
-        TennisGame updatedTennisGame = new TennisGame();
-        updatedTennisGame.setId(gameId);
-        updatedTennisGame.setPlayerOne(tennisGame.getPlayerOne());
-        updatedTennisGame.setPlayerTwo(tennisGame.getPlayerTwo());
-        updatedTennisGame.setPlayerOneScore(2);
-        updatedTennisGame.setPlayerTwoScore(2);
-
         // When
         when(tennisGameRepository.findById(gameId))
                 .thenReturn(Optional.of(tennisGame));
         when(tennisGameRepository.save(any(TennisGame.class)))
-                .thenReturn(updatedTennisGame);
+                .thenReturn(tennisGame);
         TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
 
         // Test Assertions
@@ -152,18 +145,11 @@ class TennisGameServiceImplTest {
         ScoreDto scoreDto = new ScoreDto();
         scoreDto.setScorer("Player 1");
 
-        TennisGame updatedTennisGame = new TennisGame();
-        updatedTennisGame.setId(gameId);
-        updatedTennisGame.setPlayerOne(tennisGame.getPlayerOne());
-        updatedTennisGame.setPlayerTwo(tennisGame.getPlayerTwo());
-        updatedTennisGame.setPlayerOneScore(4);
-        updatedTennisGame.setPlayerTwoScore(2);
-
         // When
         when(tennisGameRepository.findById(gameId))
                 .thenReturn(Optional.of(tennisGame));
         when(tennisGameRepository.save(any(TennisGame.class)))
-                .thenReturn(updatedTennisGame);
+                .thenReturn(tennisGame);
         TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
 
         // Test Assertions
