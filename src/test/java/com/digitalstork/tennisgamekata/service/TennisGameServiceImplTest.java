@@ -3,6 +3,7 @@ package com.digitalstork.tennisgamekata.service;
 import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
 import com.digitalstork.tennisgamekata.model.TennisGame;
 import com.digitalstork.tennisgamekata.repository.TennisGameRepository;
 import org.junit.jupiter.api.Test;
@@ -87,4 +88,22 @@ class TennisGameServiceImplTest {
         assertFalse(tennisGame.isGameEnded());
     }
 
+    @Test
+    void should_throw_ResourceNotFoundException_when_gameId_is_wrong() {
+        // Given
+        Long wrongGameId = 2L;
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        // When
+        when(tennisGameRepository.findById(wrongGameId))
+                .thenReturn(Optional.empty());
+
+        ResourceNotFoundException resourceNotFoundException = assertThrows(ResourceNotFoundException.class, () -> {
+            TennisGameDto tennisGameDto = tennisGameService.score(wrongGameId, scoreDto);
+        });
+
+        assertEquals("Tennis game not found with id: " + wrongGameId, resourceNotFoundException.getMessage());
+    }
 }
