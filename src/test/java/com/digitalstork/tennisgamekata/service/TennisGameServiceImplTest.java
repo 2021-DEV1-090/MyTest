@@ -218,4 +218,35 @@ class TennisGameServiceImplTest {
         assertEquals(GameStatus.DEUCE, tennisGameDto.getStatus());
         assertFalse(tennisGame.isGameEnded());
     }
+
+    @Test
+    void should_have_advantage_if_game_in_deuce_and_player_win_ball() {
+        // Given
+        Long gameId = 1L;
+
+        TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(gameId);
+        tennisGame.setPlayerOne("Player 1");
+        tennisGame.setPlayerTwo("Player 2");
+        tennisGame.setPlayerOneScore(5);
+        tennisGame.setPlayerTwoScore(5);
+        tennisGame.setStatus(GameStatus.DEUCE);
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 2");
+
+        // When
+        when(tennisGameRepository.findById(gameId))
+                .thenReturn(Optional.of(tennisGame));
+        when(tennisGameRepository.save(any(TennisGame.class)))
+                .thenReturn(tennisGame);
+        TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
+
+        // Test Assertions
+        assertNotNull(tennisGameDto);
+        assertEquals("40", tennisGameDto.getPlayerOneScore());
+        assertEquals("Advantage", tennisGameDto.getPlayerTwoScore());
+        assertEquals(GameStatus.PLAYER2_ADVANTAGE, tennisGameDto.getStatus());
+        assertFalse(tennisGame.isGameEnded());
+    }
 }
