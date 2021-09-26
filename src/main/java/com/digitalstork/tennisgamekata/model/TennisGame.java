@@ -1,5 +1,6 @@
 package com.digitalstork.tennisgamekata.model;
 
+import com.digitalstork.tennisgamekata.enums.GameStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,4 +23,6 @@ public class TennisGame {
     private String playerOne;
     private String playerTwo;
     private boolean gameEnded;
+    @Enumerated(EnumType.STRING)
+    private GameStatus status;
 }

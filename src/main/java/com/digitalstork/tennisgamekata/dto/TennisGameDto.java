@@ -1,5 +1,6 @@
 package com.digitalstork.tennisgamekata.dto;
 
+import com.digitalstork.tennisgamekata.enums.GameStatus;
 import lombok.*;
 
 @Getter
@@ -14,4 +15,5 @@ public class TennisGameDto {
     private String playerOne;
     private String playerTwo;
     private boolean gameEnded;
+    private GameStatus status;
 }

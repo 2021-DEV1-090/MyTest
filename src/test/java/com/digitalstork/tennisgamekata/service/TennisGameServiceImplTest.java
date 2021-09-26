@@ -3,6 +3,7 @@ package com.digitalstork.tennisgamekata.service;
 import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.enums.GameStatus;
 import com.digitalstork.tennisgamekata.exception.PlayerNotFoundException;
 import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
 import com.digitalstork.tennisgamekata.exception.UnauthorizedActionException;
@@ -185,5 +186,36 @@ class TennisGameServiceImplTest {
         });
 
         assertEquals("You cannot score on a game that is already finished!", unauthorizedActionException.getMessage());
+    }
+
+    @Test
+    void should_be_in_deuce_if_both_players_have_forty() {
+        // Given
+        Long gameId = 1L;
+
+        TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(gameId);
+        tennisGame.setPlayerOne("Player 1");
+        tennisGame.setPlayerTwo("Player 2");
+        tennisGame.setPlayerOneScore(3);
+        tennisGame.setPlayerTwoScore(2);
+        tennisGame.setStatus(GameStatus.IN_PROGRESS);
+
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 2");
+
+        // When
+        when(tennisGameRepository.findById(gameId))
+                .thenReturn(Optional.of(tennisGame));
+        when(tennisGameRepository.save(any(TennisGame.class)))
+                .thenReturn(tennisGame);
+        TennisGameDto tennisGameDto = tennisGameService.score(gameId, scoreDto);
+
+        // Test Assertions
+        assertNotNull(tennisGameDto);
+        assertEquals("40", tennisGameDto.getPlayerOneScore());
+        assertEquals("40", tennisGameDto.getPlayerTwoScore());
+        assertEquals(GameStatus.DEUCE, tennisGameDto.getStatus());
+        assertFalse(tennisGame.isGameEnded());
     }
 }
