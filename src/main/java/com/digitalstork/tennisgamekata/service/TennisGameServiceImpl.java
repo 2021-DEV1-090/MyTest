@@ -84,6 +84,18 @@ public class TennisGameServiceImpl implements TennisGameService {
 
     @Override
     public TennisGameDto endGame(Long gameId) {
-        return null;
+        TennisGame tennisGame = tennisGameRepository.findById(gameId)
+                .orElseThrow(() -> new ResourceNotFoundException("Tennis game not found with id: " + gameId));
+
+        if (tennisGame.isGameEnded())
+            throw new UnauthorizedActionException("This game is already finished!");
+
+        tennisGame.setGameEnded(true);
+        TennisGame savedTennisGame = tennisGameRepository.save(tennisGame);
+        TennisGameDto tennisGameDto = tennisGameMapper.apply(savedTennisGame);
+
+        log.info("Game Ended before finishing with Score: {}:{} - {}:{}", tennisGameDto.getPlayerOne(), tennisGameDto.getPlayerOneScore(), tennisGameDto.getPlayerTwo(), tennisGameDto.getPlayerTwoScore());
+
+        return tennisGameDto;
     }
 }
