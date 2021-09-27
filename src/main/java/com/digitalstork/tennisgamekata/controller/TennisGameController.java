@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/tennis-game")
 @AllArgsConstructor
@@ -18,7 +20,7 @@ public class TennisGameController {
     private final TennisGameService tennisGameService;
 
     @PostMapping("/new")
-    public ResponseEntity<TennisGameDto> createNewGame(@RequestBody TennisGameCreateDto tennisGameCreateDto) {
+    public ResponseEntity<TennisGameDto> createNewGame(@RequestBody @Valid TennisGameCreateDto tennisGameCreateDto) {
         return ResponseEntity.ok(tennisGameService.createGame(tennisGameCreateDto));
     }
 }
