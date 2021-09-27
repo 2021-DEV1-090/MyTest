@@ -2,6 +2,8 @@ package com.digitalstork.tennisgamekata.controller;
 
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.exception.ApiError;
+import com.digitalstork.tennisgamekata.exception.ErrorCode;
 import com.digitalstork.tennisgamekata.service.TennisGameService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -56,5 +59,24 @@ class TennisGameControllerTest {
         assertEquals(tennisGameDto.getPlayerOne(), response.getBody().getPlayerOne());
         assertEquals(tennisGameDto.getPlayerTwo(), response.getBody().getPlayerTwo());
         assertFalse(response.getBody().isGameEnded());
+    }
+
+    @Test
+    void should_throw_data_validation_errors_when_blank_values_provided() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/new";
+        TennisGameCreateDto tennisGameCreateDto = new TennisGameCreateDto();
+        tennisGameCreateDto.setPlayerOne("");
+        tennisGameCreateDto.setPlayerTwo(null);
+
+        // When
+        ResponseEntity<ApiError> response = restTemplate.postForEntity(url, tennisGameCreateDto, ApiError.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ErrorCode.DATA_VALIDATION.name(), response.getBody().getErrorCode());
+        assertTrue(response.getBody().getSubErrors().contains("playerTwo field is required!"));
     }
 }
