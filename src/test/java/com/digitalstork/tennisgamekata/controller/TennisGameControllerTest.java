@@ -6,6 +6,7 @@ import com.digitalstork.tennisgamekata.dto.TennisGameDto;
 import com.digitalstork.tennisgamekata.enums.GameStatus;
 import com.digitalstork.tennisgamekata.exception.ApiError;
 import com.digitalstork.tennisgamekata.exception.ErrorCode;
+import com.digitalstork.tennisgamekata.exception.ResourceNotFoundException;
 import com.digitalstork.tennisgamekata.exception.UnauthorizedActionException;
 import com.digitalstork.tennisgamekata.service.TennisGameService;
 import org.junit.jupiter.api.Test;
@@ -137,5 +138,26 @@ class TennisGameControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(ErrorCode.UNAUTHORIZED_ACTION.name(), response.getBody().getErrorCode());
+    }
+
+    @Test
+    void should_handle_ResourceNotFoundException() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/";
+        Long gameId = 1L;
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 2");
+
+        // When
+        when(tennisGameService.score(eq(gameId), any(ScoreDto.class)))
+                .thenThrow(ResourceNotFoundException.class);
+
+        ResponseEntity<ApiError> response = restTemplate.postForEntity(url + gameId + "/score", scoreDto, ApiError.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ErrorCode.RESOURCE_NOT_FOUND.name(), response.getBody().getErrorCode());
     }
 }
