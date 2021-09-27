@@ -1,7 +1,9 @@
 package com.digitalstork.tennisgamekata.controller;
 
+import com.digitalstork.tennisgamekata.dto.ScoreDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameCreateDto;
 import com.digitalstork.tennisgamekata.dto.TennisGameDto;
+import com.digitalstork.tennisgamekata.enums.GameStatus;
 import com.digitalstork.tennisgamekata.exception.ApiError;
 import com.digitalstork.tennisgamekata.exception.ErrorCode;
 import com.digitalstork.tennisgamekata.service.TennisGameService;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -78,5 +81,39 @@ class TennisGameControllerTest {
         assertNotNull(response.getBody());
         assertEquals(ErrorCode.DATA_VALIDATION.name(), response.getBody().getErrorCode());
         assertTrue(response.getBody().getSubErrors().contains("playerTwo field is required!"));
+    }
+
+    @Test
+    void should_score_and_return_ok_with_updated_game_details() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/";
+        Long gameId = 1L;
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        TennisGameDto tennisGameDto = new TennisGameDto();
+        tennisGameDto.setId(gameId);
+        tennisGameDto.setPlayerOne("Player 1");
+        tennisGameDto.setPlayerTwo("Player 2");
+        tennisGameDto.setPlayerOneScore("30");
+        tennisGameDto.setPlayerTwoScore("0");
+        tennisGameDto.setStatus(GameStatus.STARTED);
+
+        // When
+        when(tennisGameService.score(eq(gameId), any(ScoreDto.class)))
+                .thenReturn(tennisGameDto);
+
+        ResponseEntity<TennisGameDto> response = restTemplate.postForEntity(url + gameId + "/score", scoreDto, TennisGameDto.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(tennisGameDto.getPlayerOne(), response.getBody().getPlayerOne());
+        assertEquals(tennisGameDto.getPlayerOneScore(), response.getBody().getPlayerOneScore());
+        assertEquals(tennisGameDto.getPlayerTwo(), response.getBody().getPlayerTwo());
+        assertEquals(tennisGameDto.getPlayerTwoScore(), response.getBody().getPlayerTwoScore());
+        assertEquals(tennisGameDto.getStatus(), response.getBody().getStatus());
+        assertFalse(response.getBody().isGameEnded());
     }
 }
