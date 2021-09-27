@@ -178,4 +178,25 @@ class TennisGameControllerTest {
         assertNotNull(response.getBody());
         assertEquals(ErrorCode.PLAYER_NOT_FOUND.name(), response.getBody().getErrorCode());
     }
+
+    @Test
+    void should_handle_IllegalScoreException() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/";
+        Long gameId = 1L;
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        // When
+        when(tennisGameService.score(eq(gameId), any(ScoreDto.class)))
+                .thenThrow(IllegalScoreException.class);
+
+        ResponseEntity<ApiError> response = restTemplate.postForEntity(url + gameId + "/score", scoreDto, ApiError.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ErrorCode.ILLEGAL_SCORE.name(), response.getBody().getErrorCode());
+    }
 }
