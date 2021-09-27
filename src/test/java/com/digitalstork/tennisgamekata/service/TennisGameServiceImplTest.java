@@ -251,4 +251,31 @@ class TennisGameServiceImplTest {
         assertEquals(GameStatus.PLAYER2_ADVANTAGE, tennisGameDto.getStatus());
         assertFalse(tennisGame.isGameEnded());
     }
+
+    @Test
+    void should_be_able_to_quit_game_before_finishing() {
+        // Given
+        Long gameId = 1L;
+
+        TennisGame tennisGame = new TennisGame();
+        tennisGame.setId(gameId);
+        tennisGame.setPlayerOne("Player 1");
+        tennisGame.setPlayerTwo("Player 2");
+        tennisGame.setPlayerOneScore(1);
+        tennisGame.setPlayerTwoScore(3);
+        tennisGame.setStatus(GameStatus.STARTED);
+
+        // When
+        when(tennisGameRepository.findById(gameId))
+                .thenReturn(Optional.of(tennisGame));
+        when(tennisGameRepository.save(any(TennisGame.class)))
+                .thenReturn(tennisGame);
+        TennisGameDto tennisGameDto = tennisGameService.endGame(gameId);
+
+        // Test Assertions
+        assertNotNull(tennisGameDto);
+        assertEquals("15", tennisGameDto.getPlayerOneScore());
+        assertEquals("40", tennisGameDto.getPlayerTwoScore());
+        assertTrue(tennisGameDto.isGameEnded());
+    }
 }

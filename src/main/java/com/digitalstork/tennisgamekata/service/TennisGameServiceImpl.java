@@ -81,4 +81,9 @@ public class TennisGameServiceImpl implements TennisGameService {
 
         return tennisGameDto;
     }
+
+    @Override
+    public TennisGameDto endGame(Long gameId) {
+        return null;
+    }
 }

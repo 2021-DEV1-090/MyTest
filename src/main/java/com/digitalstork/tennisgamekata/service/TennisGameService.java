@@ -9,4 +9,6 @@ public interface TennisGameService {
     TennisGameDto createGame(TennisGameCreateDto tennisGameCreateDto);
 
     TennisGameDto score(Long gameId, ScoreDto scoreDto);
+
+    TennisGameDto endGame(Long gameId);
 }
