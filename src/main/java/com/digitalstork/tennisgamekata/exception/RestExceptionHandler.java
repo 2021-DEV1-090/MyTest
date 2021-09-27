@@ -65,4 +65,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(PlayerNotFoundException.class)
+    protected ResponseEntity<Object> handlePlayerNotFoundException(PlayerNotFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .errorCode(ErrorCode.PLAYER_NOT_FOUND.name())
+                .message(ex.getMessage())
+                .subErrors(new ArrayList<>())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 }
