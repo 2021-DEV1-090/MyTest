@@ -78,4 +78,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(IllegalScoreException.class)
+    protected ResponseEntity<Object> handleIllegalScoreException(IllegalScoreException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .errorCode(ErrorCode.ILLEGAL_SCORE.name())
+                .message(ex.getMessage())
+                .subErrors(new ArrayList<>())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
