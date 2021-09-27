@@ -199,4 +199,32 @@ class TennisGameControllerTest {
         assertNotNull(response.getBody());
         assertEquals(ErrorCode.ILLEGAL_SCORE.name(), response.getBody().getErrorCode());
     }
+
+    @Test
+    void should_quit_game_and_return_ok() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/";
+        Long gameId = 1L;
+
+        TennisGameDto tennisGameDto = new TennisGameDto();
+        tennisGameDto.setId(gameId);
+        tennisGameDto.setPlayerOne("Player 1");
+        tennisGameDto.setPlayerTwo("Player 2");
+        tennisGameDto.setPlayerOneScore("30");
+        tennisGameDto.setPlayerTwoScore("0");
+        tennisGameDto.setStatus(GameStatus.STARTED);
+        tennisGameDto.setGameEnded(true);
+
+        // When
+        when(tennisGameService.endGame(gameId))
+                .thenReturn(tennisGameDto);
+
+        ResponseEntity<TennisGameDto> response = restTemplate.postForEntity(url + gameId + "/quit", null, TennisGameDto.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().isGameEnded());
+    }
 }

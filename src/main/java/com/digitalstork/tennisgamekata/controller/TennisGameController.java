@@ -26,4 +26,9 @@ public class TennisGameController {
     public ResponseEntity<TennisGameDto> score(@PathVariable Long gameId, @RequestBody @Valid ScoreDto scoreDto) {
         return ResponseEntity.ok(tennisGameService.score(gameId, scoreDto));
     }
+
+    @PostMapping("/{gameId}/quit")
+    public ResponseEntity<TennisGameDto> quitGame(@PathVariable Long gameId) {
+        return ResponseEntity.ok(new TennisGameDto());
+    }
 }
