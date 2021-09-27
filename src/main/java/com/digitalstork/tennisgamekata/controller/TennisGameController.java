@@ -29,6 +29,6 @@ public class TennisGameController {
 
     @PostMapping("/{gameId}/quit")
     public ResponseEntity<TennisGameDto> quitGame(@PathVariable Long gameId) {
-        return ResponseEntity.ok(new TennisGameDto());
+        return ResponseEntity.ok(tennisGameService.endGame(gameId));
     }
 }
