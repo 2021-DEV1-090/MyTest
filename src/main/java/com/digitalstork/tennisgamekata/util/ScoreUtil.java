@@ -22,10 +22,10 @@ public class ScoreUtil {
                     throw new IllegalScoreException("Illegal score!");
             }
         } else {
-            if (score == otherScore || score + 1 == otherScore || score + 2 == otherScore) return "40";
+            if (score == otherScore || score + 1 == otherScore || score + 2 <= otherScore) return "40";
             else {
                 if (score == otherScore + 1) return "Advantage";
-                if (score == otherScore + 2) return "Won";
+                if (score >= otherScore + 2) return "Won";
             }
         }
         throw new IllegalScoreException("Illegal score!");

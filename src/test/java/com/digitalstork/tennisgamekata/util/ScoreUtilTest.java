@@ -11,7 +11,7 @@ class ScoreUtilTest {
     void should_throw_IllegalScoreException_when_bad_scores_provided() {
         // Test Assertions
         IllegalScoreException illegalScoreException = assertThrows(IllegalScoreException.class, () -> {
-            String score = ScoreUtil.translateScore(8, 20);
+            String score = ScoreUtil.translateScore(-8, 20);
         });
 
         assertEquals("Illegal score!", illegalScoreException.getMessage());
