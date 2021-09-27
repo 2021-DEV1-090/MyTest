@@ -6,6 +6,7 @@ import com.digitalstork.tennisgamekata.dto.TennisGameDto;
 import com.digitalstork.tennisgamekata.enums.GameStatus;
 import com.digitalstork.tennisgamekata.exception.ApiError;
 import com.digitalstork.tennisgamekata.exception.ErrorCode;
+import com.digitalstork.tennisgamekata.exception.UnauthorizedActionException;
 import com.digitalstork.tennisgamekata.service.TennisGameService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,5 +116,26 @@ class TennisGameControllerTest {
         assertEquals(tennisGameDto.getPlayerTwoScore(), response.getBody().getPlayerTwoScore());
         assertEquals(tennisGameDto.getStatus(), response.getBody().getStatus());
         assertFalse(response.getBody().isGameEnded());
+    }
+
+    @Test
+    void should_handle_UnauthorizedActionException() {
+        // Given
+        String url = "http://localhost:" + port + "/api/tennis-game/";
+        Long gameId = 1L;
+        ScoreDto scoreDto = new ScoreDto();
+        scoreDto.setScorer("Player 1");
+
+        // When
+        when(tennisGameService.score(eq(gameId), any(ScoreDto.class)))
+                .thenThrow(UnauthorizedActionException.class);
+
+        ResponseEntity<ApiError> response = restTemplate.postForEntity(url + gameId + "/score", scoreDto, ApiError.class);
+
+        // Test Assertions
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(ErrorCode.UNAUTHORIZED_ACTION.name(), response.getBody().getErrorCode());
     }
 }
