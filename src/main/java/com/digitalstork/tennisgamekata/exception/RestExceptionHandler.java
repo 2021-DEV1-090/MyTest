@@ -52,4 +52,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    protected ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        ApiError apiError = ApiError.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND)
+                .errorCode(ErrorCode.RESOURCE_NOT_FOUND.name())
+                .message(ex.getMessage())
+                .subErrors(new ArrayList<>())
+                .build();
+
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 }
